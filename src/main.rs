@@ -10,6 +10,8 @@ use winapi::um::d3dcommon::{
     D3D_FEATURE_LEVEL_9_3,
 };
 
+use windows::Win32::Graphics::Dxgi::IDXGIDevice as IDXGIDevice_windows;
+
 const DIRECT3D_FEATURE_LEVELS: &[u32] = &[
     D3D_FEATURE_LEVEL_11_1,
     D3D_FEATURE_LEVEL_11_0,
@@ -65,4 +67,11 @@ fn main() {
 
     dbg!(hr);
     dbg!(priority);
+
+    let dxgi_device2 = unsafe { (p as *mut IDXGIDevice_windows).as_ref().unwrap() };
+    dbg!(dxgi_device2);
+    // crash
+    let priority = unsafe { dxgi_device2.GetGPUThreadPriority() };
+    dbg!(&priority);
+    priority.ok();
 }
