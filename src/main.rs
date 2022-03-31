@@ -61,9 +61,12 @@ fn main() {
     dbg!(p);
 
     let dxgi_device = unsafe { (p as *mut IDXGIDevice).as_ref().unwrap() };
+    let rc = unsafe { dxgi_device.AddRef()};
+    dbg!(rc);
 
     let mut priority = -1;
     let hr = unsafe { dxgi_device.GetGPUThreadPriority(&mut priority) };
+   
 
     dbg!(hr);
     dbg!(priority);
