@@ -54,8 +54,7 @@ fn main() {
     let device = unsafe { device.as_ref().unwrap() };
 
     let mut p: *mut c_void = std::ptr::null_mut();
-    let pp: *mut *mut c_void = &mut p;
-    let hr = unsafe { device.QueryInterface(&IID_IDXGIDevice, pp) };
+    let hr = unsafe { device.QueryInterface(&IID_IDXGIDevice, & mut p) };
 
     dbg!(hr);
     dbg!(p);
@@ -67,7 +66,6 @@ fn main() {
     let mut priority = -1;
     let hr = unsafe { dxgi_device.GetGPUThreadPriority(&mut priority) };
    
-
     dbg!(hr);
     dbg!(priority);
 
