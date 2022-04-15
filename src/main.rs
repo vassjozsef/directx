@@ -10,8 +10,8 @@ use winapi::um::d3dcommon::{
     D3D_FEATURE_LEVEL_9_3,
 };
 
-use windows::Win32::Graphics::Dxgi::IDXGIDevice as IDXGIDevice_windows;
 use windows::core::Abi;
+use windows::Win32::Graphics::Dxgi::IDXGIDevice as IDXGIDevice_windows;
 
 const DIRECT3D_FEATURE_LEVELS: &[u32] = &[
     D3D_FEATURE_LEVEL_11_1,
@@ -55,25 +55,23 @@ fn main() {
     let device = unsafe { device.as_ref().unwrap() };
 
     let mut p: *mut c_void = std::ptr::null_mut();
-    let hr = unsafe { device.QueryInterface(&IID_IDXGIDevice, & mut p) };
+    let hr = unsafe { device.QueryInterface(&IID_IDXGIDevice, &mut p) };
 
     dbg!(hr);
     dbg!(p);
 
     let dxgi_device = unsafe { (p as *mut IDXGIDevice).as_ref().unwrap() };
-    let rc = unsafe { dxgi_device.AddRef()};
+    let rc = unsafe { dxgi_device.AddRef() };
     dbg!(rc);
 
     let mut priority = -1;
     let hr = unsafe { dxgi_device.GetGPUThreadPriority(&mut priority) };
-   
+
     dbg!(hr);
     dbg!(priority);
 
     let dxgi_device2 = unsafe { IDXGIDevice_windows::from_abi(p as *mut _).unwrap() };
     dbg!(&dxgi_device2);
-    // crash
-    let priority = unsafe { dxgi_device2.GetGPUThreadPriority() };
-    dbg!(&priority);
-    priority.ok();
+    let priority = unsafe { dxgi_device2.GetGPUThreadPriority() }.ok().unwrap();
+    dbg!(priority);
 }
