@@ -72,14 +72,21 @@ fn main() {
     dbg!(hr);
     dbg!(priority);
 
+    // convert to windows crate IDXGIDevice
     let dxgi_device2 = unsafe { IDXGIDevice_windows::from_abi(p as *mut _).unwrap() };
     dbg!(&dxgi_device2);
     let priority = unsafe { dxgi_device2.GetGPUThreadPriority() }.ok().unwrap();
     dbg!(priority);
 
-    let unknown = unsafe {std::mem::transmute::<IDXGIDevice_windows, IUnknownLocal>(dxgi_device2)};
+    // convert back to winapi DXGIDevice
+    let unknown =
+        unsafe { std::mem::transmute::<IDXGIDevice_windows, IUnknownLocal>(dxgi_device2) };
     dbg!(unknown.0);
-  //   let p2: c_void = c_void::from(unknown.0);
-  //  let p2: *mut c_void = &dxgi_device2 as *mut _ as *mut c_void;
-  //  let dxgi_device3 = unsafe { (p2 as *mut IDXGIDevice).as_ref().unwrap() };    
+    let p2 = unknown.0.as_ptr();
+    dbg!(p2);
+    let dxgi_device3 = unsafe { (p2 as *mut IDXGIDevice).as_ref().unwrap() };
+    let mut priority = -1;
+    let hr = unsafe { dxgi_device3.GetGPUThreadPriority(&mut priority) };
+    dbg!(hr);
+    dbg!(priority);
 }
