@@ -23,6 +23,8 @@ const DIRECT3D_FEATURE_LEVELS: &[u32] = &[
     D3D_FEATURE_LEVEL_9_1,
 ];
 
+pub struct IUnknownLocal(core::ptr::NonNull<core::ffi::c_void>);
+
 fn main() {
     let levels = DIRECT3D_FEATURE_LEVELS;
     let flags = match cfg!(debug) {
@@ -74,4 +76,10 @@ fn main() {
     dbg!(&dxgi_device2);
     let priority = unsafe { dxgi_device2.GetGPUThreadPriority() }.ok().unwrap();
     dbg!(priority);
+
+    let unknown = unsafe {std::mem::transmute::<IDXGIDevice_windows, IUnknownLocal>(dxgi_device2)};
+    dbg!(unknown.0);
+  //   let p2: c_void = c_void::from(unknown.0);
+  //  let p2: *mut c_void = &dxgi_device2 as *mut _ as *mut c_void;
+  //  let dxgi_device3 = unsafe { (p2 as *mut IDXGIDevice).as_ref().unwrap() };    
 }

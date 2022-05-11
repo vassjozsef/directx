@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-winapi = { version = "0.3.7", features = ["d3d11"] }
+winapi = { version = "0.3.7", features = ["std", "d3d11"] }
 windows = { version = "0.34.0", features = ["Win32_Graphics_Dxgi"] }
